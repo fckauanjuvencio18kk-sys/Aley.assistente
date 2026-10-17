@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aley - Assistente Virtual</title>
+<style>
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: #080d18;
+  color: white;
+  font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 20px;
+  box-sizing: border-box;
+}
+.orb {
+  width: 125px;
+  height: 125px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #9affff, #0879d9 45%, #10152f 75%);
+  box-shadow: 0 0 35px #008cff;
+}
+h1 { color: #70eaff; letter-spacing: 7px; }
+button {
+  padding: 14px 22px;
+  margin: 8px;
+  border: 1px solid #43cfff;
+  border-radius: 12px;
+  background: #102b49;
+  color: white;
+  font-size: 16px;
+}
+p { color: #d0dcec; }
+</style>
+</head>
+<body>
+<div class="orb"></div>
+<h1>ALEY</h1>
+<p id="status">Sua assistente está pronta!</p>
+<button onclick="ouvir()">🎙️ Falar com Aley</button>
+<p id="resultado">Sua fala aparecerá aqui.</p>
+
+<script>
+function ouvir() {
+  const API = window.SpeechRecognition ||
+              window.webkitSpeechRecognition;
+
+  if (!API) {
+    document.getElementById("status").textContent =
+      "Reconhecimento de voz indisponível neste navegador.";
+    return;
+  }
+
+  const rec = new API();
+  rec.lang = "pt-BR";
+  rec.onstart = () => {
+    document.getElementById("status").textContent =
+      "Estou ouvindo...";
+  };
+  rec.onresult = (e) => {
+    document.getElementById("resultado").textContent =
+      e.results[0][0].transcript;
+    document.getElementById("status").textContent =
+      "Consegui reconhecer sua fala!";
+  };
+  rec.onerror = (e) => {
+    document.getElementById("status").textContent =
+      "Erro de voz: " + e.error;
+  };
+  rec.start();
+}
+</script>
+</body>
+</html>
